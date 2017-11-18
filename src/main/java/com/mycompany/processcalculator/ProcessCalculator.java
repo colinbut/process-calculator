@@ -5,6 +5,10 @@
  */
 package com.mycompany.processcalculator;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,12 +49,20 @@ public class ProcessCalculator {
     public static void main(String[] args) {
 
         // setup an example data set
-        List<String> instructions = new ArrayList<String>();
-        instructions.add("add 2");
-        instructions.add("multiply 3");
-        instructions.add("apply 3");
+        List<String> instructions = new ArrayList<>();
 
-        Map<MathOperation, Integer> mathInstructions = new HashMap<MathOperation, Integer>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/main/resources/inputFile.txt")))) {
+            String line;
+            while((line = reader.readLine()) != null) {
+                instructions.add(line);
+            }
+            System.out.println(instructions);
+        } catch (IOException ex) {
+            System.err.println(ex.getLocalizedMessage());
+            System.exit(-1);
+        }
+
+        Map<MathOperation, Integer> mathInstructions = new HashMap<>();
 
         for (String instruction : instructions) {
             if (instruction.contains(Instruction.APPLY)) {
