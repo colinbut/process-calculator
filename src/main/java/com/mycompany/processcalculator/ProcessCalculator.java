@@ -51,7 +51,7 @@ public class ProcessCalculator {
         // setup an example data set
         List<String> instructions = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/main/resources/inputFile.txt")))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/main/resources/example1.txt")))) {
             String line;
             while((line = reader.readLine()) != null) {
                 instructions.add(line);
