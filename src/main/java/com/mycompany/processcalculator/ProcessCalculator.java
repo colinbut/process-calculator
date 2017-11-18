@@ -12,6 +12,10 @@ import java.util.Map;
 
 public class ProcessCalculator {
 
+    final class Instruction {
+        static final String APPLY = "apply";
+    }
+
     enum MathOperation {
         ADD("add"),
         SUBTRACT("subtract"),
@@ -38,14 +42,9 @@ public class ProcessCalculator {
         }
     }
 
-    class ProcessCalculationException extends RuntimeException {
-        ProcessCalculationException(String message) {
-            super(message);
-        }
-    }
-
     public static void main(String[] args) {
 
+        // setup an example data set
         List<String> instructions = new ArrayList<String>();
         instructions.add("add 2");
         instructions.add("multiply 3");
@@ -54,7 +53,7 @@ public class ProcessCalculator {
         Map<MathOperation, Integer> mathInstructions = new HashMap<MathOperation, Integer>();
 
         for (String instruction : instructions) {
-            if (instruction.contains("apply")) {
+            if (instruction.contains(Instruction.APPLY)) {
                 continue;
             }
 
@@ -66,14 +65,17 @@ public class ProcessCalculator {
 
         String applyInstructions = instructions.remove(instructions.size() - 1);
         if (!applyInstructions.contains("apply")) {
-            throw new IllegalStateException("Invalid format");
+            throw new ProcessCalculationException("First instruction expected to be: " + Instruction.APPLY);
         }
 
         String[] applyInstructionsItems = applyInstructions.split(" ");
         String applyInstruction = applyInstructionsItems[0];
-        int number = Integer.parseInt(applyInstructionsItems[1]);
+        if (!applyInstruction.equals(Instruction.APPLY)) {
+            throw new IllegalStateException("Apply instruction should be apply");
+        }
 
-        int total = number;
+        int total = Integer.parseInt(applyInstructionsItems[1]);
+
         for (Map.Entry<MathOperation, Integer> mathInstruction : mathInstructions.entrySet()) {
             switch (mathInstruction.getKey()) {
                 case ADD:
@@ -92,5 +94,7 @@ public class ProcessCalculator {
                         throw new IllegalStateException("Invalid MathOperation to apply");
             }
         }
+
+        System.out.println(total);
     }
 }
