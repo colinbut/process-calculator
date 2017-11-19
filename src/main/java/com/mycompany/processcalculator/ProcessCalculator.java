@@ -46,7 +46,7 @@ public class ProcessCalculator {
         }
 
         String applyInstructions = instructions.remove(instructions.size() - 1);
-        if (!applyInstructions.contains("apply")) {
+        if (!applyInstructions.contains(Instruction.APPLY)) {
             throw new ProcessCalculationException("First instruction expected to be: " + Instruction.APPLY);
         }
 
