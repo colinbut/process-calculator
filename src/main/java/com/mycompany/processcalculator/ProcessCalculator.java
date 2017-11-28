@@ -5,6 +5,12 @@
  */
 package com.mycompany.processcalculator;
 
+import com.mycompany.processcalculator.math.AdditionFormula;
+import com.mycompany.processcalculator.math.DivisionFormula;
+import com.mycompany.processcalculator.math.MathFormula;
+import com.mycompany.processcalculator.math.MultiplicationFormula;
+import com.mycompany.processcalculator.math.SubtractionFormula;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -15,6 +21,15 @@ import java.util.List;
 import java.util.Map;
 
 public class ProcessCalculator {
+
+    private static Map<MathOperation, MathFormula> mathFormulaMap = new HashMap<>();
+
+    static {
+        mathFormulaMap.put(MathOperation.ADD, new AdditionFormula());
+        mathFormulaMap.put(MathOperation.SUBTRACT, new SubtractionFormula());
+        mathFormulaMap.put(MathOperation.MULTIPLY, new MultiplicationFormula());
+        mathFormulaMap.put(MathOperation.DIVIDE, new DivisionFormula());
+    }
 
     public static void main(String[] args) {
 
@@ -59,22 +74,8 @@ public class ProcessCalculator {
         int total = Integer.parseInt(applyInstructionsItems[1]);
 
         for (Map.Entry<MathOperation, Integer> mathInstruction : mathInstructions.entrySet()) {
-            switch (mathInstruction.getKey()) {
-                case ADD:
-                    total += mathInstruction.getValue();
-                    break;
-                case SUBTRACT:
-                    total -= mathInstruction.getValue();
-                    break;
-                case MULTIPLY:
-                    total *= mathInstruction.getValue();
-                    break;
-                case DIVIDE:
-                    total /= mathInstruction.getValue();
-                    break;
-                    default:
-                        throw new IllegalStateException("Invalid MathOperation to apply");
-            }
+            MathFormula mathFormula = mathFormulaMap.get(mathInstruction.getKey());
+            total = mathFormula.calculate(total, mathInstruction.getValue());
         }
 
         System.out.println(total);
