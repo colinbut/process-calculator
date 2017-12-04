@@ -10,19 +10,21 @@ import com.mycompany.processcalculator.math.DivisionFormula;
 import com.mycompany.processcalculator.math.MathFormula;
 import com.mycompany.processcalculator.math.MultiplicationFormula;
 import com.mycompany.processcalculator.math.SubtractionFormula;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class ProcessCalculator {
 
-    private static Map<MathOperation, MathFormula> mathFormulaMap = new HashMap<>();
+    private static Map<MathOperation, MathFormula> mathFormulaMap = new EnumMap<>(MathOperation.class);
 
     static {
         mathFormulaMap.put(MathOperation.ADD, new AdditionFormula());
@@ -41,13 +43,12 @@ public class ProcessCalculator {
             while((line = reader.readLine()) != null) {
                 instructions.add(line);
             }
-            System.out.println(instructions);
         } catch (IOException ex) {
-            System.err.println(ex.getLocalizedMessage());
+            log.error(ex.getLocalizedMessage());
             System.exit(-1);
         }
 
-        Map<MathOperation, Integer> mathInstructions = new HashMap<>();
+        Map<MathOperation, Integer> mathInstructions = new EnumMap<>(MathOperation.class);
 
         for (String instruction : instructions) {
             if (instruction.contains(Instruction.APPLY)) {
@@ -78,6 +79,6 @@ public class ProcessCalculator {
             total = mathFormula.calculate(total, mathInstruction.getValue());
         }
 
-        System.out.println(total);
+        log.info("{}", total);
     }
 }
